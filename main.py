@@ -51,16 +51,6 @@ if __name__ == '__main__':
         dt = datetime.now()
         if (dt.hour >= 12) & (dt.minute >= 0):
 
-            ### Dados resample hour
-            novos_dados = data[~data.index.isin(data_hour.index)]
-            data_hour = pd.concat([data_hour, novos_dados])
-            ### Dados dollar_bar
-            novos_dados_dollar = dollar_bar[~dollar_bar.index.isin(data_dollar.index)]
-            data_dollar = pd.concat([data_dollar, novos_dados_dollar])
-            ### Dados pred
-            novos_dados_pred = pred[~pred.index.isin(data_pred.index)]
-            novos_dados_pred = pd.concat([data_pred, novos_dados_pred])
-
 
             dt_hour_new = datetime.now().hour
 
@@ -111,22 +101,32 @@ if __name__ == '__main__':
 
                 print(str(datetime.now()) + '  RODOU TUDO')
 
-        elif (dt.hour >= 16) & (dt.minute >= 0):
-            on = False
+                ### Dados resample hour
+                novos_dados = data[~data.index.isin(data_hour.index)]
+                data_hour = pd.concat([data_hour, novos_dados])
+                ### Dados dollar_bar
+                novos_dados_dollar = dollar_bar[~dollar_bar.index.isin(data_dollar.index)]
+                data_dollar = pd.concat([data_dollar, novos_dados_dollar])
+                ### Dados pred
+                novos_dados_pred = pred[~pred.index.isin(data_pred.index)]
+                data_pred = pd.concat([data_pred, novos_dados_pred])
 
-            ### Dados resample hour
-            novos_dados = data[~data.index.isin(data_hour.index)]
-            data_hour = pd.concat([data_hour, novos_dados])
-            ### Dados dollar_bar
-            novos_dados_dollar = dollar_bar[~dollar_bar.index.isin(data_dollar.index)]
-            data_dollar = pd.concat([data_dollar, novos_dados_dollar])
-            ### Dados pred
-            novos_dados_pred = pred[~pred.index.isin(data_pred.index)]
-            novos_dados_pred = pd.concat([data_pred, novos_dados_pred])
+            if (dt.hour >= 19) & (dt.minute >= 0):
+                on = False
 
-            data_hour.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
-            data_dollar.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
-            novos_dados_pred.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
+                ### Dados resample hour
+                novos_dados = data[~data.index.isin(data_hour.index)]
+                data_hour = pd.concat([data_hour, novos_dados])
+                ### Dados dollar_bar
+                novos_dados_dollar = dollar_bar[~dollar_bar.index.isin(data_dollar.index)]
+                data_dollar = pd.concat([data_dollar, novos_dados_dollar])
+                ### Dados pred
+                novos_dados_pred = pred[~pred.index.isin(data_pred.index)]
+                novos_dados_pred = pd.concat([data_pred, novos_dados_pred])
 
-            print('break')
-            break
+                data_hour.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
+                data_dollar.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
+                novos_dados_pred.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
+
+                print('break')
+                break
