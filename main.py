@@ -124,9 +124,16 @@ if __name__ == '__main__':
                 novos_dados_pred = pred[~pred.index.isin(data_pred.index)]
                 novos_dados_pred = pd.concat([data_pred, novos_dados_pred])
 
-                data_hour.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
-                data_dollar.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
-                novos_dados_pred.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save')
+                data_hour.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save\data_hour.csv')
+                data_dollar.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save\data_dollar.csv')
+                novos_dados_pred.to_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\dados_save\novos_dados_pred.csv')
 
                 print('break')
                 break
+
+
+pred['close'] = dollar_bar['close']
+pred['ret'] = pred['close'] - pred['close'].shift(1)
+pred['st_ret'] = pred['pred'] * pred['ret'].shift(-1)
+
+pred['st_ret'].cumsum().plot()
