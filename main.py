@@ -8,6 +8,7 @@ import time
 from datetime import datetime
 import pickle
 from sklearn.preprocessing import StandardScaler
+import order_module as om
 
 # Open the .pkl file in binary mode
 with open('features_selected.pkl', 'rb') as f:
@@ -45,6 +46,8 @@ if __name__ == '__main__':
     dt_hour = datetime.now().hour
 
     data_minute = pd.DataFrame()
+
+    first_dollarbar = exm.dollar_bar_startday()
 
     while on == True:
 
@@ -94,12 +97,47 @@ if __name__ == '__main__':
                 pred = pd.DataFrame(model.predict_proba(X_train_data_scaled))
 
 
-                pred['short'] = np.where(pred[0] > 0.50, -1, 0)
-                pred['long'] = np.where(pred[1] > 0.50, 1, 0)
+                pred['short'] = np.where(pred[0] > 0.90, -1, 0)
+                pred['long'] = np.where(pred[1] > 0.90, 1, 0)
                 pred['pred'] = pred['long'] + pred['short']
                 pred.index = features.index
 
                 print(str(datetime.now()) + '  RODOU TUDO')
+
+                if pred.index[-1] != first_dollarbar.index[-1]:
+
+                    positions = mt5.positions_get(symbol='CCMK24')[0][9]
+
+                    first_dollarbar = dollar_bar.copy()
+
+                    if pred['pred'].iloc[-1] != pred['pred'].iloc[-2]:
+
+                        if positions == 0:
+                            if (pred['pred'] == 1):
+                                mt5.order_send(om.Buy(symbol='CCMK24',position_size=1))
+                            else:
+                                mt5.order_send(om.Sell(symbol='CCMK24',position_size=1))
+
+                        else:
+                            if (pred['pred'].iloc[-1] == 1) & (pred['pred'].iloc[-2] == -1):
+                                mt5.order_send(om.close(symbol='CCMK24'))
+                                mt5.order_send(om.Buy(symbol='CCMK24',position_size=1))
+
+                            elif (pred['pred'].iloc[-1] == -1) & (pred['pred'].iloc[-2] == 1):
+                                mt5.order_send(om.close(symbol='CCMK24'))
+                                mt5.order_send(om.Sell(symbol='CCMK24',position_size=1))
+
+                            elif (pred['pred'] == 0):
+                                mt5.order_send(om.close(symbol='CCMK24'))
+
+
+
+
+
+
+
+
+
 
                 ### Dados resample hour
                 novos_dados = data[~data.index.isin(data_hour.index)]

@@ -100,3 +100,25 @@ def shap_selection(shap_values):
     selected_features = np.where(aggregated_shap_values > threshold)[0]
 
     return selected_features, top_k_features
+
+
+def dollar_bar_startday():
+
+    data_minute_new = get_ohlc('CCM$', mt5.TIMEFRAME_M1, n=70000)
+
+    data = data_minute_new.resample('H').agg({
+        'open': 'first',
+        'high': 'max',
+        'low': 'min',
+        'close': 'last',
+        'real_volume': 'sum'
+    }).dropna().iloc[:-1]
+
+    data['volume'] = data['close'] * data['real_volume']
+    del data['real_volume']
+
+    data['v_mean'] = data['volume'].rolling(240).mean()
+
+    dollar_bar, trades = generate_dollar_bars_frequency(data, mean=240, frequency='yes')
+
+    return dollar_bar
