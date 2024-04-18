@@ -19,13 +19,13 @@ if not mt5.initialize():
 
 
 data_all = exm.get_ohlc('CCM$', mt5.TIMEFRAME_H1, n=70000)
-data_all = data_all[['Open','High','Low','Close','real_volume']]
-data_all['real_volume'] = data_all['real_volume'] * data_all['Close']
+data_all = data_all[['open','high','low','close','real_volume']]
+data_all['real_volume'] = data_all['real_volume'] * data_all['close']
 data_all.columns = ['open','high','low','close','volume']
 
 
-dollar_bar, trades = exm.generate_dollar_bars_frequency(data_all.iloc[:-5], mean=240, frequency='yes')
-main, return_outcomes, binary_outcomes_main = exm.features_target(dollar_bar)
+dollar_bar, trades = exm.generate_dollar_bars_frequency(data_all, mean=240, frequency='yes')
+main, return_outcomes, binary_outcomes_main = exm.features_target_modelo(dollar_bar)
 del main['ibs']
 
 
@@ -39,7 +39,7 @@ Y_train_data = binary_outcomes['return_3']
 
 Y_train_data = np.where(Y_train_data == 0, -1, Y_train_data)
 
-X_train_data_outro = pd.read_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\veai.csv',parse_dates=True,index_col=[0])
+#X_train_data_outro = pd.read_csv(r'C:\Users\Fabio\PycharmProjects\milho_futuro\veai.csv',parse_dates=True,index_col=[0])
 
 ### Scale
 scaler = StandardScaler()

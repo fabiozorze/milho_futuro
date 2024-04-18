@@ -84,6 +84,19 @@ def features_target(data,windows=None):
 
     return features, return_outcomes, binary_outcomes
 
+def features_target_modelo(data):
+
+    windows = [1,3,5,9,15,30,40,80]
+    data = ma_strategy(data)
+    features = eg.add_and_save_features_ALL(data, windows)
+    features = fm.return_lag(features)
+    features = fm.MA(features)
+    features.drop(['open', 'high', 'low', 'close', 'volume','ret','ma','ma_sinal','ma_st'], axis=1, inplace=True)
+
+    return_outcomes, binary_outcomes = fm.target_outcomes(data)
+
+    return features, return_outcomes, binary_outcomes
+
 
 def shap_selection(shap_values):
     # Calculate absolute SHAP values
