@@ -68,15 +68,3 @@ def close(symbol=None):
     }
 
     return (requestClose)
-
-
-positions[0].ticket
-
-mt5.order_send(close(symbol='CCMK24'))
-
-mt5.order_send(Buy(symbol='CCMK24',position_size=1))
-
-mt5.order_send(Sell(symbol='CCMK24',position_size=1))
-
-HM =mt5.orders_get(ticket='CCMK24')
-

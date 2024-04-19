@@ -9,6 +9,10 @@ from datetime import datetime
 import pickle
 from sklearn.preprocessing import StandardScaler
 import order_module as om
+import warnings
+
+# Suppress specific RuntimeWarnings
+warnings.filterwarnings("ignore", category=RuntimeWarning, message="Degrees of freedom <= 0 for slice")
 
 # Open the .pkl file in binary mode
 with open('features_selected.pkl', 'rb') as f:
@@ -52,7 +56,7 @@ if __name__ == '__main__':
     while on == True:
 
         dt = datetime.now()
-        if (dt.hour >= 12) & (dt.minute >= 0):
+        if (dt.hour >= 9) & (dt.minute >= 0):
 
 
             dt_hour_new = datetime.now().hour
@@ -104,11 +108,17 @@ if __name__ == '__main__':
 
                 print(str(datetime.now()) + '  RODOU TUDO')
 
+                print(first_dollarbar.index[-1])
+                print(pred.index[-1])
+
                 if pred.index[-1] != first_dollarbar.index[-1]:
 
                     positions = mt5.positions_get(symbol='CCMK24')[0][9]
 
                     first_dollarbar = dollar_bar.copy()
+
+                    print(pred['pred'].iloc[-2])
+                    print(pred['pred'].iloc[-1])
 
                     if pred['pred'].iloc[-1] != pred['pred'].iloc[-2]:
 
@@ -129,14 +139,6 @@ if __name__ == '__main__':
 
                             elif (pred['pred'] == 0):
                                 mt5.order_send(om.close(symbol='CCMK24'))
-
-
-
-
-
-
-
-
 
 
                 ### Dados resample hour
@@ -168,10 +170,3 @@ if __name__ == '__main__':
 
                 print('break')
                 break
-
-
-pred['close'] = dollar_bar['close']
-pred['ret'] = pred['close'] - pred['close'].shift(1)
-pred['st_ret'] = pred['pred'] * pred['ret'].shift(-1)
-
-pred['st_ret'].cumsum().plot()

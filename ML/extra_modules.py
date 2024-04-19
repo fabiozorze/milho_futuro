@@ -50,7 +50,7 @@ def generate_dollar_bars_frequency(data, mean=None, frequency=None):
     lasti = 0
     for i in range(len(prices)):
         dollars += volumes[i]
-        if dollars >= trades['Dollar_Volume_mean'][i]:
+        if dollars >= trades['Dollar_Volume_mean'].iloc[i]:
             dates.append(times[i])                   # time
             ans[candle_counter][1] = prices[lasti]                     # open
             ans[candle_counter][2] = np.max(prices[lasti:i + 1])       # high

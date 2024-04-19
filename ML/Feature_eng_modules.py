@@ -4,7 +4,9 @@ from scipy import stats
 from tqdm import tqdm, tqdm_notebook  # progress bar
 from pprint import pprint
 import statsmodels.api as sm
-
+import warnings
+# Suppress specific RuntimeWarnings
+warnings.filterwarnings("ignore", category=RuntimeWarning, message="Degrees of freedom <= 0 for slice")
 import numpy_ext as npx
 
 
@@ -181,7 +183,7 @@ def numpy_vwap(
 ) -> np.ndarray:
     n = np.shape(np.arange(len_df - window))[0]
     A = np.empty((n, 2))
-    for i in tqdm(np.arange(len_df - window)):
+    for i in (np.arange(len_df - window)):
         tmp_avg = avg[i : i + window]
         tmp_v = v[i : i + window]
         aa = np.sum(tmp_v * tmp_avg) / np.sum(tmp_v)
@@ -291,8 +293,8 @@ def add_and_save_features(data_dic, data_frequency, periods):
 
     df = data_dic[data_frequency].copy()
 
-    for key, window in tqdm(periods.items()):
-        tqdm._instances.clear()
+    for key, window in (periods.items()):
+        #tqdm._instances.clear()
         try:
             df = (
                 df.pipe(add_average_price)
