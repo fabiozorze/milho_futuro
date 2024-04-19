@@ -113,7 +113,11 @@ if __name__ == '__main__':
 
                 if pred.index[-1] != first_dollarbar.index[-1]:
 
-                    positions = mt5.positions_get(symbol='CCMK24')[0][9]
+                    try:
+                        positions = mt5.positions_get(symbol='CCMK24')[0][9]
+                    except:
+                        positions = 0
+
 
                     first_dollarbar = dollar_bar.copy()
 
