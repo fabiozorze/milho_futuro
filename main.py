@@ -118,7 +118,6 @@ if __name__ == '__main__':
                     except:
                         positions = 0
 
-
                     first_dollarbar = dollar_bar.copy()
 
                     print(pred['pred'].iloc[-2])
@@ -127,7 +126,7 @@ if __name__ == '__main__':
                     if pred['pred'].iloc[-1] != pred['pred'].iloc[-2]:
 
                         if positions == 0:
-                            if (pred['pred'] == 1):
+                            if (pred['pred'].iloc[-1] == 1):
                                 mt5.order_send(om.Buy(symbol='CCMK24',position_size=1))
                             else:
                                 mt5.order_send(om.Sell(symbol='CCMK24',position_size=1))
@@ -141,7 +140,7 @@ if __name__ == '__main__':
                                 mt5.order_send(om.close(symbol='CCMK24'))
                                 mt5.order_send(om.Sell(symbol='CCMK24',position_size=1))
 
-                            elif (pred['pred'] == 0):
+                            elif (pred['pred'].iloc[-1] == 0):
                                 mt5.order_send(om.close(symbol='CCMK24'))
 
 
